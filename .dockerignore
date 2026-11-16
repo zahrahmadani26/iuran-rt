@@ -1,0 +1,12 @@
+.git
+.github
+node_modules
+vendor
+database/*.sqlite
+database/*.sqlite-journal
+tests
+.env
+.env.backup
+.env.production
+.phpunit.result.cache
+iuran-rw
