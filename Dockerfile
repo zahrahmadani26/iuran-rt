@@ -29,8 +29,10 @@ WORKDIR /var/www/html
 # 4. Salin seluruh source code project
 COPY . .
 
-# 5. Install dependensi Composer production
-RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts
+# 5. Hapus cache lokal & install dependensi Composer production
+RUN rm -f bootstrap/cache/*.php \
+    && composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts \
+    && composer dump-autoload --optimize --no-dev
 
 # 6. Salin konfigurasi Nginx, Supervisor, dan Entrypoint
 COPY docker/nginx.conf /etc/nginx/sites-available/default
