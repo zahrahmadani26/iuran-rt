@@ -1,39 +1,49 @@
 # ============================================================
 # Dockerfile Production untuk Laravel di Fly.io
-# Menggunakan base image resmi serversideup (PHP 8.3 + Nginx)
+# PHP 8.3 FPM + Nginx + Supervisor (Standard Debian Bookworm)
 # ============================================================
-FROM serversideup/php:8.3-fpm-nginx
+FROM php:8.3-fpm-bookworm
 
-USER root
+# 1. Install sistem dependensi & ekstensi yang dibutuhkan
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    nginx \
+    supervisor \
+    curl \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    libzip-dev \
+    unzip \
+    sqlite3 \
+    libsqlite3-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) gd pdo_sqlite bcmath opcache zip \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install ekstensi PHP GD yang dibutuhkan oleh PhpSpreadsheet / Excel
-RUN install-php-extensions gd
+# 2. Ambil binary Composer resmi
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Set direktori kerja aplikasi
+# 3. Setup direktori kerja
 WORKDIR /var/www/html
 
-# Environment default untuk container Laravel
-ENV PHP_OPCACHE_ENABLE=1 \
-    AUTORUN_LARAVEL_MIGRATION=false \
-    AUTORUN_LARAVEL_STORAGE_LINK=false
+# 4. Salin seluruh source code project
+COPY . .
 
-# 1. Salin seluruh file aplikasi dengan kepemilikan 9999:9999 (www-data)
-COPY --chown=9999:9999 . .
-
-# 2. Install dependensi composer (tanpa dev)
+# 5. Install dependensi Composer production
 RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts
 
-# 3. Dump autoload & generate package discovery
-RUN composer dump-autoload --optimize --no-dev
+# 6. Salin konfigurasi Nginx, Supervisor, dan Entrypoint
+COPY docker/nginx.conf /etc/nginx/sites-available/default
+COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY docker/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-# 4. Salin script inisialisasi container saat boot ke entrypoint.d
-COPY --chmod=755 docker/entrypoint.sh /etc/entrypoint.d/99-laravel-init.sh
-
-# 5. Pastikan permissions folder storage, bootstrap/cache, dan database tepat
+# 7. Pastikan hak akses direktori storage dan cache
 RUN mkdir -p /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database \
-    && chown -R 9999:9999 /var/www/html \
+    && chown -R www-data:www-data /var/www/html \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database
 
-USER root
-
 EXPOSE 8080
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
