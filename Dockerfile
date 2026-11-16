@@ -4,6 +4,11 @@
 # ============================================================
 FROM serversideup/php:8.3-fpm-nginx
 
+# Install ekstensi PHP GD yang dibutuhkan oleh PhpSpreadsheet / Excel
+USER root
+RUN install-php-extensions gd
+USER 9999:9999
+
 # Set direktori kerja aplikasi
 WORKDIR /var/www/html
 
