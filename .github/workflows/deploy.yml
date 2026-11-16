@@ -1,0 +1,88 @@
+name: CI & Auto Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Run Automated Tests (CI)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP 8.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_sqlite, sqlite3, bcmath
+          coverage: none
+
+      - name: Install Composer Dependencies
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+      - name: Setup Environment
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+          touch database/database.sqlite
+          php artisan migrate --force
+
+      - name: Execute Tests (PHPUnit)
+        run: php artisan test
+
+  deploy:
+    name: Auto Deploy to VPS (CD)
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - name: Deploy to VPS via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          passphrase: ${{ secrets.VPS_SSH_PASSPHRASE }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          script: |
+            set -e
+            echo "🚀 Memulai Deployment ke VPS..."
+            
+            # Masuk ke direktori project di VPS
+            APP_DIR="${{ secrets.VPS_APP_DIR || '/var/www/iuran-rt' }}"
+            cd "$APP_DIR"
+            
+            # Set mode maintenance sementara
+            php artisan down || true
+            
+            # Tarik kode terbaru dari GitHub
+            git fetch --all
+            git reset --hard origin/main
+            
+            # Install / Update dependensi composer
+            composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
+            
+            # Jalankan migrasi database
+            php artisan migrate --force
+            
+            # Optimasi cache konfigurasi & routing
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
+            
+            # Buat symbolic link storage jika belum ada
+            php artisan storage:link || true
+            
+            # Kembalikan website ke status online
+            php artisan up
+            
+            echo "✅ Deployment Berhasil Selesai!"

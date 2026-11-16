@@ -7,6 +7,7 @@ use App\Http\Controllers\IuranController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\KeuanganController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RfidWebController;
 
 Route::get('/', function () {
     return redirect('/login');
@@ -40,6 +41,9 @@ Route::middleware(['auth'])->group(function () {
     // ROUTE KHUSUS PENGELUARAN - PAKAI DIRECT ROUTE
     Route::get('/pengeluaran/create', [KeuanganController::class, 'createPengeluaran'])->name('pengeluaran.create');
     
+    // RFID / IoT
+    Route::get('/rfid', [RfidWebController::class, 'index'])->name('rfid.index');
+
     // Profile
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');

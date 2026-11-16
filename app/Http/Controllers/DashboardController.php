@@ -36,21 +36,35 @@ class DashboardController extends Controller
         $totalIuranTerkumpul = Pembayaran::where('status', 'verified')->count();
         $persenIuranTerkumpul = $totalTargetIuran > 0 ? round(($totalIuranTerkumpul / $totalTargetIuran) * 100) : 0;
         
-        // Transaksi bulan ini
-        $transaksiBulanIni = Keuangan::whereMonth('tanggal', date('m'))->whereYear('tanggal', date('Y'))->count();
+        // Transaksi bulan ini (SQLite compatible)
+        $currentMonth = date('m');
+        $currentYear  = date('Y');
+        $transaksiBulanIni = Keuangan::whereRaw("strftime('%m', tanggal) = ?", [$currentMonth])
+            ->whereRaw("strftime('%Y', tanggal) = ?", [$currentYear])
+            ->count();
         
-                // Chart Data - Perbaikan query
+                // Chart Data - SQLite compatible (no MySQL functions)
         $chartData = Keuangan::select(
-            DB::raw('DATE_FORMAT(tanggal, "%b") as bulan'),
-            DB::raw('MONTH(tanggal) as bulan_num'),
-            DB::raw('SUM(CASE WHEN jenis = "pemasukan" THEN nominal ELSE 0 END) as pemasukan'),
-            DB::raw('SUM(CASE WHEN jenis = "pengeluaran" THEN nominal ELSE 0 END) as pengeluaran')
+            DB::raw("strftime('%m', tanggal) as bulan_num"),
+            DB::raw("SUM(CASE WHEN jenis = 'pemasukan' THEN nominal ELSE 0 END) as pemasukan"),
+            DB::raw("SUM(CASE WHEN jenis = 'pengeluaran' THEN nominal ELSE 0 END) as pengeluaran")
         )
-        ->whereYear('tanggal', date('Y'))
-        ->groupBy('bulan', 'bulan_num')
+        ->whereRaw("strftime('%Y', tanggal) = ?", [$currentYear])
+        ->groupBy('bulan_num')
         ->orderBy('bulan_num', 'asc')
         ->limit(6)
         ->get();
+
+        $monthNames = [
+            '01' => 'Jan', '02' => 'Feb', '03' => 'Mar', '04' => 'Apr',
+            '05' => 'Mei', '06' => 'Jun', '07' => 'Jul', '08' => 'Agu',
+            '09' => 'Sep', '10' => 'Okt', '11' => 'Nov', '12' => 'Des',
+        ];
+
+        $chartData->transform(function ($item) use ($monthNames) {
+            $item->bulan = $monthNames[$item->bulan_num] ?? ('Bln ' . $item->bulan_num);
+            return $item;
+        });
         
         if($chartData->isEmpty()) {
             $chartData = collect([

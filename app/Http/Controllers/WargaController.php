@@ -29,7 +29,8 @@ class WargaController extends Controller
             'alamat' => 'required',
             'no_telp' => 'required',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:6'
+            'password' => 'required|min:6',
+            'rfid_uid' => 'nullable|string|unique:wargas,rfid_uid'
         ]);
         
         $user = User::create([
@@ -45,7 +46,9 @@ class WargaController extends Controller
             'no_kk' => $request->no_kk,
             'nama_lengkap' => $request->nama_lengkap,
             'alamat' => $request->alamat,
-            'no_telp' => $request->no_telp
+            'no_telp' => $request->no_telp,
+            'status' => $request->status ?? 'aktif',
+            'rfid_uid' => $request->rfid_uid ? strtoupper(trim($request->rfid_uid)) : null,
         ]);
         
         return redirect()->route('warga.index')->with('success', 'Warga berhasil ditambahkan');
@@ -61,10 +64,14 @@ class WargaController extends Controller
         $request->validate([
             'nama_lengkap' => 'required',
             'alamat' => 'required',
-            'no_telp' => 'required'
+            'no_telp' => 'required',
+            'rfid_uid' => 'nullable|string|unique:wargas,rfid_uid,' . $warga->id
         ]);
         
-        $warga->update($request->only(['nama_lengkap', 'alamat', 'no_telp', 'status']));
+        $data = $request->only(['nama_lengkap', 'alamat', 'no_telp', 'status']);
+        $data['rfid_uid'] = $request->rfid_uid ? strtoupper(trim($request->rfid_uid)) : null;
+        
+        $warga->update($data);
         $warga->user->update(['name' => $request->nama_lengkap]);
         
         return redirect()->route('warga.index')->with('success', 'Warga berhasil diupdate');
