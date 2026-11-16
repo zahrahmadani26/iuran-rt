@@ -23,6 +23,7 @@
 /vendor
 /database/*.sqlite
 /database/*.sqlite-journal
+/iuran-rw/
 _ide_helper.php
 Homestead.json
 Homestead.yaml
