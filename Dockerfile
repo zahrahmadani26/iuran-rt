@@ -4,6 +4,8 @@
 # ============================================================
 FROM serversideup/php:8.3-fpm-nginx
 
+USER root
+
 # Install ekstensi PHP GD yang dibutuhkan oleh PhpSpreadsheet / Excel
 RUN install-php-extensions gd
 
@@ -31,5 +33,7 @@ COPY --chmod=755 docker/entrypoint.sh /etc/entrypoint.d/99-laravel-init.sh
 RUN mkdir -p /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database \
     && chown -R 9999:9999 /var/www/html \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database
+
+USER root
 
 EXPOSE 8080
