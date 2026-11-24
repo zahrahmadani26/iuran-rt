@@ -2,6 +2,9 @@
 title SI-IURAN RT - Cloudflare Tunnel Online Server
 color 0A
 
+:: Pastikan bekerja di folder script ini berada (D:\laragon\www\iuran-rt)
+cd /d "%~dp0"
+
 echo ======================================================================
 echo           MENYALAKAN SERVER IURAN RT + CLOUDFLARE TUNNEL
 echo ======================================================================
@@ -21,8 +24,14 @@ if not exist "%CF_BIN%" (
     exit /b
 )
 
+:: Hentikan instance php artisan serve lama jika ada yang nyangkut
+taskkill /F /IM php.exe > nul 2>&1
+
 echo [1/2] Menyalakan Laravel Server di port 8000...
-start "Laravel Server (SI-IURAN RT)" /B "%PHP_BIN%" artisan serve --host=127.0.0.1 --port=8000 > nul 2>&1
+start "Laravel Server (SI-IURAN RT)" "%PHP_BIN%" artisan serve --host=127.0.0.1 --port=8000
+
+:: Berikan jeda 2 detik agar server Laravel siap
+timeout /t 2 /nobreak > nul
 
 echo [2/2] Menghubungkan ke Cloudflare Network...
 echo.
