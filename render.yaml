@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: iuran-rt
+    runtime: docker
+    region: singapore
+    plan: free
+    dockerfilePath: Dockerfile
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: DB_CONNECTION
+        value: sqlite
+      - key: DB_DATABASE
+        value: /data/database.sqlite
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: SESSION_DRIVER
+        value: file
+      - key: CACHE_STORE
+        value: file
+      - key: QUEUE_CONNECTION
+        value: sync
+      - key: APP_KEY
+        value: base64:B6ZxM4fmkLqhkntHPiXacuYUTOPZz2J4Ad8n60X5UiU=

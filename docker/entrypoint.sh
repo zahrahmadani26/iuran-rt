@@ -1,9 +1,15 @@
 #!/bin/sh
 set -e
 
-echo "🚀 [Fly.io] Initializing Laravel..."
+echo "🚀 [Deploy] Initializing Laravel..."
 
-# Pastikan folder data ada di persistent volume
+# If PORT is specified (e.g. Render uses 10000 or custom port), update Nginx config
+PORT=${PORT:-8080}
+echo "🌐 Configuring Nginx to listen on port $PORT..."
+sed -i "s/listen [0-9]\+ default_server;/listen $PORT default_server;/g" /etc/nginx/sites-available/default
+sed -i "s/listen \[::\]:[0-9]\+ default_server;/listen [::]:$PORT default_server;/g" /etc/nginx/sites-available/default
+
+# Pastikan folder data ada
 mkdir -p /data
 chown -R www-data:www-data /data
 chmod -R 775 /data
@@ -30,6 +36,6 @@ php artisan view:cache
 chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /data
 chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache /data
 
-echo "✅ [Fly.io] Inisialisasi selesai! Menjalankan Nginx & PHP-FPM..."
+echo "✅ [Deploy] Inisialisasi selesai! Menjalankan Nginx & PHP-FPM..."
 
 exec "$@"
