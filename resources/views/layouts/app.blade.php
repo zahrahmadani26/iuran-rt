@@ -317,12 +317,63 @@
 
             <div class="sidebar-nav">
                 <span class="nav-section-title">Menu Utama</span>
-                
+
                 <a href="{{ route('dashboard') }}" class="sidebar-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                     <i class="fas fa-grid-horizontal"></i>
                     <span>Dashboard</span>
                 </a>
-                
+                <a href="{{ route('pengumuman.index') }}" class="sidebar-link {{ request()->routeIs('pengumuman.*') ? 'active' : '' }}">
+                    <i class="fas fa-bullhorn"></i>
+                    <span>Pengumuman RT</span>
+                </a>
+                <a href="{{ route('jadwal.index') }}" class="sidebar-link {{ request()->routeIs('jadwal.*') ? 'active' : '' }}">
+                    <i class="fas fa-calendar-days"></i>
+                    <span>Jadwal Kegiatan</span>
+                </a>
+
+                <span class="nav-section-title mt-2">Layanan Warga</span>
+
+                <a href="{{ route('pembayaran.index') }}" class="sidebar-link {{ request()->routeIs('pembayaran.*') ? 'active' : '' }}">
+                    <i class="fas fa-receipt"></i>
+                    <span>Pembayaran Iuran</span>
+                </a>
+                <a href="{{ route('surat.index') }}" class="sidebar-link {{ request()->routeIs('surat.*') ? 'active' : '' }}">
+                    <i class="fas fa-file-signature"></i>
+                    <span>Surat Pengantar</span>
+                    @if(in_array(auth()->user()->role, ['super_admin','admin','bendahara']))
+                        @php $suratPending = \App\Models\SuratPengantar::whereIn('status', ['pending','diproses'])->count(); @endphp
+                        @if($suratPending > 0)
+                            <span class="badge bg-info text-dark ms-auto">{{ $suratPending }}</span>
+                        @endif
+                    @endif
+                </a>
+                <a href="{{ route('laporan.index') }}" class="sidebar-link {{ request()->routeIs('laporan.*') ? 'active' : '' }}">
+                    <i class="fas fa-comments"></i>
+                    <span>Laporan & Aspirasi</span>
+                </a>
+                <a href="{{ route('kartu_keluarga.index') }}" class="sidebar-link {{ request()->routeIs('kartu_keluarga.*') ? 'active' : '' }}">
+                    <i class="fas fa-house-user"></i>
+                    <span>Data KK / Keluarga</span>
+                </a>
+
+                <span class="nav-section-title mt-2">Keamanan & Darurat</span>
+
+                <a href="{{ route('panic.index') }}" class="sidebar-link {{ request()->routeIs('panic.*') ? 'active' : '' }}" style="{{ request()->routeIs('panic.*') ? 'background:#dc2626;' : '' }}">
+                    <i class="fas fa-triangle-exclamation text-danger"></i>
+                    <span>Panic Button SOS</span>
+                    @php $sosAktif = \App\Models\PanicButton::where('status', 'aktif')->count(); @endphp
+                    @if($sosAktif > 0)
+                        <span class="badge bg-danger ms-auto">{{ $sosAktif }}</span>
+                    @endif
+                </a>
+                <a href="{{ route('kontak_darurat.index') }}" class="sidebar-link {{ request()->routeIs('kontak_darurat.*') ? 'active' : '' }}">
+                    <i class="fas fa-phone-volume"></i>
+                    <span>Kontak Darurat</span>
+                </a>
+
+                @if(in_array(auth()->user()->role, ['super_admin','admin','bendahara']))
+                <span class="nav-section-title mt-2">Administrasi RT</span>
+
                 @if(auth()->user()->role === 'super_admin')
                 <a href="{{ route('super_admin.index') }}" class="sidebar-link {{ request()->routeIs('super_admin.*') ? 'active' : '' }}">
                     <i class="fas fa-user-shield"></i>
@@ -334,7 +385,6 @@
                 </a>
                 @endif
 
-                @if(in_array(auth()->user()->role, ['super_admin','admin','bendahara']))
                 <a href="{{ route('warga.index') }}" class="sidebar-link {{ request()->routeIs('warga.*') ? 'active' : '' }}">
                     <i class="fas fa-users-rectangle"></i>
                     <span>Data Warga</span>
@@ -353,20 +403,15 @@
                     <span class="badge bg-success ms-auto" style="font-size: 0.65rem;">BARU</span>
                 </a>
                 @endif
-                
-                <a href="{{ route('pembayaran.index') }}" class="sidebar-link {{ request()->routeIs('pembayaran.*') ? 'active' : '' }}">
-                    <i class="fas fa-receipt"></i>
-                    <span>Pembayaran</span>
-                </a>
-                
+
                 @if(in_array(auth()->user()->role, ['super_admin','admin','bendahara']))
                 <span class="nav-section-title mt-2">Keuangan</span>
-                
+
                 <a href="{{ route('keuangan.index') }}" class="sidebar-link {{ request()->routeIs('keuangan.index') ? 'active' : '' }}">
                     <i class="fas fa-chart-pie"></i>
                     <span>Laporan Kas</span>
                 </a>
-                
+
                 <div class="sidebar-submenu">
                     <a href="{{ route('keuangan.create') }}" class="submenu-link">
                         <i class="fas fa-circle-plus text-success" style="font-size: 11px;"></i>
@@ -418,7 +463,11 @@
                     </div>
                 </div>
 
-                <div class="d-flex align-items-center gap-3">
+                <div class="d-flex align-items-center gap-2 gap-md-3">
+                    <a href="{{ route('panic.index') }}" class="btn btn-danger btn-sm rounded-pill px-3 fw-bold d-flex align-items-center gap-1" title="Tombol Darurat SOS">
+                        <i class="fas fa-triangle-exclamation"></i>
+                        <span class="d-none d-sm-inline">SOS Darurat</span>
+                    </a>
                     <div class="dropdown">
                         <button class="user-dropdown-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <div class="user-avatar">

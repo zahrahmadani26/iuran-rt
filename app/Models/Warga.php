@@ -22,4 +22,24 @@ class Warga extends Model
     {
         return $this->hasMany(Pembayaran::class);
     }
+
+    public function kartuKeluargas()
+    {
+        return $this->hasMany(KartuKeluarga::class);
+    }
+
+    public function suratPengantars()
+    {
+        return $this->hasMany(SuratPengantar::class);
+    }
+
+    public function laporans()
+    {
+        return $this->hasMany(Laporan::class);
+    }
+
+    public function panicButtons()
+    {
+        return $this->hasMany(PanicButton::class);
+    }
 }

@@ -10,6 +10,13 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RfidWebController;
 use App\Http\Controllers\RegisterWargaController;
 use App\Http\Controllers\SuperAdminController;
+use App\Http\Controllers\PengumumanController;
+use App\Http\Controllers\SuratPengantarController;
+use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\JadwalKegiatanController;
+use App\Http\Controllers\KontakDaruratController;
+use App\Http\Controllers\KartuKeluargaController;
+use App\Http\Controllers\PanicButtonController;
 
 // === HALAMAN WELCOME ===
 Route::get('/', function () {
@@ -22,9 +29,9 @@ Route::get('/daftar', [RegisterWargaController::class, 'showForm'])->name('regis
 Route::post('/daftar', [RegisterWargaController::class, 'store'])->name('register.warga.store');
 
 // === AUTH (login/logout bawaan Laravel) ===
-Auth::routes(['register' => false]); // Nonaktifkan register bawaan, pakai custom
+Auth::routes(['register' => false]);
 
-Route::get('/home', function() {
+Route::get('/home', function () {
     return redirect('/dashboard');
 });
 
@@ -34,23 +41,76 @@ Route::middleware(['auth', 'check.status'])->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Warga (hanya admin)
-    Route::resource('warga', WargaController::class)->middleware('role:super_admin,admin,bendahara');
+    // === PENGUMUMAN RT ===
+    Route::get('/pengumuman', [PengumumanController::class, 'index'])->name('pengumuman.index');
+    Route::middleware('role:super_admin,admin,bendahara')->group(function () {
+        Route::post('/pengumuman', [PengumumanController::class, 'store'])->name('pengumuman.store');
+        Route::put('/pengumuman/{pengumuman}', [PengumumanController::class, 'update'])->name('pengumuman.update');
+        Route::post('/pengumuman/{pengumuman}/pin', [PengumumanController::class, 'togglePin'])->name('pengumuman.pin');
+        Route::delete('/pengumuman/{pengumuman}', [PengumumanController::class, 'destroy'])->name('pengumuman.destroy');
+    });
 
-    // Iuran (hanya admin)
+    // === SURAT PENGANTAR DIGITAL ===
+    Route::get('/surat', [SuratPengantarController::class, 'index'])->name('surat.index');
+    Route::post('/surat', [SuratPengantarController::class, 'store'])->name('surat.store');
+    Route::get('/surat/{surat}/pdf', [SuratPengantarController::class, 'downloadPdf'])->name('surat.pdf');
+    Route::delete('/surat/{surat}', [SuratPengantarController::class, 'destroy'])->name('surat.destroy');
+    Route::middleware('role:super_admin,admin,bendahara')->group(function () {
+        Route::post('/surat/{surat}/process', [SuratPengantarController::class, 'process'])->name('surat.process');
+        Route::post('/surat/{surat}/approve', [SuratPengantarController::class, 'approve'])->name('surat.approve');
+        Route::post('/surat/{surat}/reject', [SuratPengantarController::class, 'reject'])->name('surat.reject');
+    });
+
+    // === LAPORAN / ASPIRASI WARGA ===
+    Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+    Route::post('/laporan', [LaporanController::class, 'store'])->name('laporan.store');
+    Route::delete('/laporan/{laporan}', [LaporanController::class, 'destroy'])->name('laporan.destroy');
+    Route::middleware('role:super_admin,admin,bendahara')->group(function () {
+        Route::post('/laporan/{laporan}/status', [LaporanController::class, 'updateStatus'])->name('laporan.status');
+    });
+
+    // === JADWAL KEGIATAN RT ===
+    Route::get('/jadwal', [JadwalKegiatanController::class, 'index'])->name('jadwal.index');
+    Route::middleware('role:super_admin,admin,bendahara')->group(function () {
+        Route::post('/jadwal', [JadwalKegiatanController::class, 'store'])->name('jadwal.store');
+        Route::put('/jadwal/{jadwal}', [JadwalKegiatanController::class, 'update'])->name('jadwal.update');
+        Route::delete('/jadwal/{jadwal}', [JadwalKegiatanController::class, 'destroy'])->name('jadwal.destroy');
+    });
+
+    // === KONTAK DARURAT ===
+    Route::get('/kontak-darurat', [KontakDaruratController::class, 'index'])->name('kontak_darurat.index');
+    Route::middleware('role:super_admin,admin,bendahara')->group(function () {
+        Route::post('/kontak-darurat', [KontakDaruratController::class, 'store'])->name('kontak_darurat.store');
+        Route::put('/kontak-darurat/{kontakDarurat}', [KontakDaruratController::class, 'update'])->name('kontak_darurat.update');
+        Route::delete('/kontak-darurat/{kontakDarurat}', [KontakDaruratController::class, 'destroy'])->name('kontak_darurat.destroy');
+    });
+
+    // === DATA KARTU KELUARGA (KK) ===
+    Route::get('/kartu-keluarga', [KartuKeluargaController::class, 'index'])->name('kartu_keluarga.index');
+    Route::post('/kartu-keluarga', [KartuKeluargaController::class, 'store'])->name('kartu_keluarga.store');
+    Route::put('/kartu-keluarga/{kartuKeluarga}', [KartuKeluargaController::class, 'update'])->name('kartu_keluarga.update');
+    Route::delete('/kartu-keluarga/{kartuKeluarga}', [KartuKeluargaController::class, 'destroy'])->name('kartu_keluarga.destroy');
+
+    // === PANIC BUTTON SOS ===
+    Route::get('/panic-button', [PanicButtonController::class, 'index'])->name('panic.index');
+    Route::post('/panic-button', [PanicButtonController::class, 'trigger'])->name('panic.trigger');
+    Route::middleware('role:super_admin,admin,bendahara')->group(function () {
+        Route::post('/panic-button/{panic}/tangani', [PanicButtonController::class, 'tangani'])->name('panic.tangani');
+        Route::post('/panic-button/{panic}/selesai', [PanicButtonController::class, 'selesai'])->name('panic.selesai');
+    });
+
+    // === ADMINISTRASI & KEUANGAN EXISTING ===
+    Route::resource('warga', WargaController::class)->middleware('role:super_admin,admin,bendahara');
     Route::resource('iuran', IuranController::class)->middleware('role:super_admin,admin,bendahara');
 
-    // Pembayaran
     Route::resource('pembayaran', PembayaranController::class);
     Route::get('/pembayaran/{id}/verify', [PembayaranController::class, 'verify'])->name('pembayaran.verify');
     Route::get('/pembayaran/{id}/reject', [PembayaranController::class, 'reject'])->name('pembayaran.reject');
 
-    // Keuangan (hanya admin)
     Route::resource('keuangan', KeuanganController::class)->middleware('role:super_admin,admin,bendahara');
     Route::get('/keuangan/export/excel', [KeuanganController::class, 'exportExcel'])->name('keuangan.export');
     Route::get('/pengeluaran/create', [KeuanganController::class, 'createPengeluaran'])->name('pengeluaran.create');
 
-    // RFID / IoT & NFC (hanya admin)
     Route::get('/rfid', [RfidWebController::class, 'index'])->name('rfid.index')->middleware('role:super_admin,admin,bendahara');
     Route::get('/nfc', [RfidWebController::class, 'nfc'])->name('nfc.index')->middleware('role:super_admin,admin,bendahara');
 

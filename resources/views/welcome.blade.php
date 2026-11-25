@@ -356,37 +356,55 @@
             <div class="col-md-4">
                 <div class="feature-card">
                     <div class="feature-icon" style="background:#fef3c7;color:#d97706;">
-                        <i class="fas fa-user-shield"></i>
+                        <i class="fas fa-file-signature"></i>
                     </div>
-                    <div class="feature-title">Verifikasi Super Admin</div>
-                    <p class="feature-desc">Setiap pendaftaran warga baru harus diverifikasi oleh Ketua RT sebagai Super Admin sebelum dapat mengakses sistem.</p>
+                    <div class="feature-title">Surat Pengantar Digital</div>
+                    <p class="feature-desc">Ajukan surat domisili, pengantar KTP, SKCK, atau SKTM online. Setelah disetujui Ketua RT, langsung unduh file PDF resmi.</p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="feature-card">
-                    <div class="feature-icon" style="background:#fce7f3;color:#db2777;">
-                        <i class="fas fa-receipt"></i>
+                    <div class="feature-icon" style="background:#fee2e2;color:#dc2626;">
+                        <i class="fas fa-triangle-exclamation"></i>
                     </div>
-                    <div class="feature-title">Riwayat Pembayaran</div>
-                    <p class="feature-desc">Setiap warga dapat melihat riwayat pembayaran iurannya sendiri. Bukti bayar tersedia kapan saja.</p>
+                    <div class="feature-title">Panic Button SOS & Darurat</div>
+                    <p class="feature-desc">Tombol darurat sekali klik untuk kebakaran, kemalingan, atau darurat medis beserta daftar nomor penting PLN, Damkar, & Polisi.</p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="feature-card">
                     <div class="feature-icon" style="background:#e0f2fe;color:#0284c7;">
-                        <i class="fas fa-bell"></i>
+                        <i class="fas fa-bullhorn"></i>
                     </div>
-                    <div class="feature-title">Notifikasi Real-time</div>
-                    <p class="feature-desc">Admin mendapat notifikasi langsung setiap ada warga baru mendaftar atau ada pembayaran masuk.</p>
+                    <div class="feature-title">Pengumuman & Agenda RT</div>
+                    <p class="feature-desc">Papan pengumuman resmi dan kalender jadwal kegiatan warga (kerja bakti, rapat, posyandu) agar warga tidak ketinggalan info.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon" style="background:#fce7f3;color:#db2777;">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <div class="feature-title">Laporan & Aspirasi Warga</div>
+                    <p class="feature-desc">Laporkan fasilitas rusak seperti lampu mati atau saluran mampet lengkap dengan foto, dan pantau progres penanganannya.</p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="feature-card">
                     <div class="feature-icon" style="background:#f0fdf4;color:#15803d;">
-                        <i class="fas fa-mobile-screen-button"></i>
+                        <i class="fas fa-house-user"></i>
                     </div>
-                    <div class="feature-title">Ramah Mobile</div>
-                    <p class="feature-desc">Tampilan responsif, nyaman diakses dari HP Android maupun laptop. Tidak perlu install aplikasi tambahan.</p>
+                    <div class="feature-title">Data Kartu Keluarga (KK)</div>
+                    <p class="feature-desc">Pendataan anggota keluarga per rumah lengkap dan rapi, terhubung dengan sistem verifikasi Super Admin Ketua RT.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon" style="background:#f3e8ff;color:#9333ea;">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <div class="feature-title">Verifikasi Super Admin</div>
+                    <p class="feature-desc">Setiap pendaftaran warga baru harus diverifikasi oleh Ketua RT sebagai Super Admin sebelum dapat mengakses sistem.</p>
                 </div>
             </div>
         </div>
