@@ -41,8 +41,9 @@ Route::middleware(['auth'])->group(function () {
     // ROUTE KHUSUS PENGELUARAN - PAKAI DIRECT ROUTE
     Route::get('/pengeluaran/create', [KeuanganController::class, 'createPengeluaran'])->name('pengeluaran.create');
     
-    // RFID / IoT
+    // RFID / IoT & NFC
     Route::get('/rfid', [RfidWebController::class, 'index'])->name('rfid.index');
+    Route::get('/nfc', [RfidWebController::class, 'nfc'])->name('nfc.index');
 
     // Profile
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');

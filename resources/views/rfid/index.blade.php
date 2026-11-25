@@ -12,6 +12,9 @@
             <p class="text-muted mb-0 small">Monitoring, Registrasi Kartu, dan Integrasi Perangkat IoT Tap Iuran Otomatis</p>
         </div>
         <div class="d-flex gap-2">
+            <a href="{{ route('nfc.index') }}" class="btn btn-success rounded-pill px-3 shadow-sm">
+                <i class="fas fa-mobile-screen-button me-1"></i> Tap NFC Android (HP)
+            </a>
             <a href="{{ route('warga.index') }}" class="btn btn-outline-primary rounded-pill px-3">
                 <i class="fas fa-users me-1"></i> Data Warga
             </a>

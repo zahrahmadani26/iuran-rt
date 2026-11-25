@@ -52,20 +52,23 @@
                             {{-- RFID Card UID Input --}}
                             <div class="col-md-12 mb-3">
                                 <label class="form-label fw-semibold">
-                                    <i class="fas fa-id-card text-primary me-1"></i> UID Kartu RFID (ESP32)
-                                    <span class="text-muted fw-normal small">(Opsional, untuk tap iuran otomatis)</span>
+                                    <i class="fas fa-id-card text-primary me-1"></i> UID Kartu RFID / NFC
+                                    <span class="text-muted fw-normal small">(Opsional, untuk tap iuran via ESP32 / HP Android)</span>
                                 </label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-light"><i class="fas fa-wifi text-muted"></i></span>
                                     <input type="text" name="rfid_uid" id="rfid_uid_input"
                                            class="form-control font-monospace @error('rfid_uid') is-invalid @enderror"
                                            placeholder="Contoh: A1B2C3D4" value="{{ old('rfid_uid') }}">
+                                    <button type="button" class="btn btn-outline-success" id="btn-scan-nfc" onclick="scanNfcWarga()">
+                                        <i class="fas fa-mobile-screen-button me-1"></i> Tap via NFC HP
+                                    </button>
                                     <button type="button" class="btn btn-outline-primary" id="btn-fetch-rfid" onclick="fetchLastRfid()">
-                                        <i class="fas fa-sync-alt me-1"></i> Ambil dari Tap Scanner
+                                        <i class="fas fa-sync-alt me-1"></i> Ambil dari ESP32
                                     </button>
                                 </div>
                                 <small id="rfid-status-text" class="text-muted mt-1 d-block">
-                                    Tempelkan kartu ke modul RC522 pada ESP32, lalu klik tombol <b>Ambil dari Tap Scanner</b>.
+                                    Bisa ditempelkan di <b>belakang HP Android (NFC)</b> atau ke alat <b>ESP32 RC522</b>.
                                 </small>
                                 @error('rfid_uid')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
                             </div>
@@ -115,6 +118,53 @@
 
 @push('scripts')
 <script>
+async function scanNfcWarga() {
+    const btn = document.getElementById('btn-scan-nfc');
+    const input = document.getElementById('rfid_uid_input');
+    const statusText = document.getElementById('rfid-status-text');
+
+    if (!('NDEFReader' in window)) {
+        alert('Fitur Web NFC tidak didukung di browser ini.\n\nSilakan gunakan Google Chrome di HP Android yang memiliki sensor NFC.');
+        return;
+    }
+
+    try {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Tempelkan Kartu ke HP...';
+        statusText.innerHTML = '<span class="text-primary fw-bold"><i class="fas fa-spinner fa-spin me-1"></i> Mendengarkan sensor NFC HP... Silakan tempelkan kartu ke bagian belakang HP Anda sekarang!</span>';
+
+        const ndef = new NDEFReader();
+        await ndef.scan();
+
+        ndef.onreading = (event) => {
+            let serial = event.serialNumber || '';
+            let cleanUid = serial.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+            if (!cleanUid) {
+                cleanUid = 'NFC-' + Math.random().toString(36).substring(2, 10).toUpperCase();
+            }
+
+            if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+
+            input.value = cleanUid;
+            statusText.innerHTML = `<span class="text-success fw-bold"><i class="fas fa-check-circle"></i> Berhasil! UID kartu terbaca via NFC HP: <b>${cleanUid}</b></span>`;
+            
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-mobile-screen-button me-1"></i> Tap via NFC HP';
+        };
+
+        ndef.onreadingerror = () => {
+            statusText.innerHTML = '<span class="text-danger"><i class="fas fa-times-circle"></i> Kartu terdeteksi tapi gagal dibaca. Coba tempelkan lagi.</span>';
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-mobile-screen-button me-1"></i> Tap via NFC HP';
+        };
+
+    } catch (err) {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-mobile-screen-button me-1"></i> Tap via NFC HP';
+        alert('Gagal mengaktifkan NFC: ' + err.message + '\nPastikan fitur NFC di Pengaturan HP Anda sudah aktif.');
+    }
+}
+
 function fetchLastRfid() {
     const btn = document.getElementById('btn-fetch-rfid');
     const input = document.getElementById('rfid_uid_input');

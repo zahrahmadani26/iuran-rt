@@ -37,4 +37,32 @@ class RfidWebController extends Controller
             'rfidPembayarans'
         ));
     }
+
+    public function nfc()
+    {
+        $totalWarga = Warga::count();
+        $wargaWithRfid = Warga::whereNotNull('rfid_uid')->where('rfid_uid', '!=', '')->count();
+        $wargas = Warga::orderBy('nama_lengkap', 'asc')->get();
+        $iurans = Iuran::all();
+        $lastScan = Cache::get('last_scanned_rfid');
+
+        // Transaksi pembayaran via NFC atau RFID
+        $nfcPembayarans = Pembayaran::with(['warga', 'iuran'])
+            ->where(function($q) {
+                $q->where('keterangan', 'like', '%NFC%')
+                  ->orWhere('keterangan', 'like', '%RFID%');
+            })
+            ->orderBy('created_at', 'desc')
+            ->limit(10)
+            ->get();
+
+        return view('rfid.nfc', compact(
+            'totalWarga',
+            'wargaWithRfid',
+            'wargas',
+            'iurans',
+            'lastScan',
+            'nfcPembayarans'
+        ));
+    }
 }

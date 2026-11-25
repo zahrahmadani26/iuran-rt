@@ -113,20 +113,30 @@ class RfidController extends Controller
         }
 
         // Catat Pembayaran baru otomatis berstatus 'verified'
+        $source = $request->input('source', 'rfid_esp32');
+        $isNfc = ($source === 'nfc_android' || $source === 'nfc');
+        $keteranganBayar = $isNfc 
+            ? 'Pembayaran via NFC HP Android (UID: ' . $uid . ')'
+            : 'Pembayaran via RFID Tap ESP32 (UID: ' . $uid . ')';
+
         $pembayaran = Pembayaran::create([
             'warga_id' => $warga->id,
             'iuran_id' => $iuran->id,
             'jumlah_dibayar' => $iuran->nominal,
             'tanggal_bayar' => now()->toDateString(),
             'status' => 'verified',
-            'keterangan' => 'Pembayaran via RFID Tap ESP32 (UID: ' . $uid . ')'
+            'keterangan' => $keteranganBayar
         ]);
 
         // Otomatis masukkan ke Kas RT (Keuangan - Pemasukan)
+        $deskripsiKas = $isNfc
+            ? 'Iuran ' . $iuran->nama_iuran . ' - ' . $warga->nama_lengkap . ' (NFC HP)'
+            : 'Iuran ' . $iuran->nama_iuran . ' - ' . $warga->nama_lengkap . ' (RFID Tap)';
+
         Keuangan::create([
             'jenis' => 'pemasukan',
             'kategori' => 'Iuran Warga',
-            'deskripsi' => 'Iuran ' . $iuran->nama_iuran . ' - ' . $warga->nama_lengkap . ' (RFID Tap)',
+            'deskripsi' => $deskripsiKas,
             'nominal' => $iuran->nominal,
             'tanggal' => now()->toDateString(),
         ]);

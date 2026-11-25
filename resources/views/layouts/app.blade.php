@@ -336,6 +336,11 @@
                     <i class="fas fa-id-card-clip"></i>
                     <span>RFID / IoT ESP32</span>
                 </a>
+                <a href="{{ route('nfc.index') }}" class="sidebar-link {{ request()->routeIs('nfc.*') ? 'active' : '' }}">
+                    <i class="fas fa-mobile-screen-button"></i>
+                    <span>Tap NFC Android</span>
+                    <span class="badge bg-success ms-auto" style="font-size: 0.65rem;">BARU</span>
+                </a>
                 @endif
                 
                 <a href="{{ route('pembayaran.index') }}" class="sidebar-link {{ request()->routeIs('pembayaran.*') ? 'active' : '' }}">
