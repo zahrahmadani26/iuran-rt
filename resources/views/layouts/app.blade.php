@@ -485,6 +485,11 @@
                                     <i class="fas fa-user-gear me-2 text-muted"></i> Pengaturan Profil
                                 </a>
                             </li>
+                            <li>
+                                <a class="dropdown-item py-2" href="{{ route('welcome.page') }}">
+                                    <i class="fas fa-house me-2 text-muted"></i> Halaman Welcome
+                                </a>
+                            </li>
                             <li><hr class="dropdown-divider my-1"></li>
                             <li>
                                 <a class="dropdown-item py-2 text-danger" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

@@ -91,6 +91,14 @@
 </head>
 <body>
     <div class="login-wrapper">
+        <div class="mb-3 d-flex justify-content-between align-items-center">
+            <a href="{{ route('welcome') }}" class="btn btn-light btn-sm rounded-pill px-3 fw-semibold shadow-sm" style="color:#3730a3;">
+                <i class="fas fa-arrow-left me-1"></i> Kembali ke Welcome Page
+            </a>
+            <a href="{{ route('register.warga') }}" class="btn btn-outline-light btn-sm rounded-pill px-3 fw-semibold">
+                <i class="fas fa-user-plus me-1"></i> Daftar Warga
+            </a>
+        </div>
         <div class="login-card">
             <div class="login-header">
                 <div class="login-icon">
@@ -150,12 +158,17 @@
                     </button>
                 </form>
 
+                <div class="text-center mt-2">
+                    <span class="text-muted small">Belum punya akun warga? </span>
+                    <a href="{{ route('register.warga') }}" class="small fw-bold text-decoration-none" style="color:#4f46e5;">Daftar di sini</a>
+                </div>
+
                 <hr class="my-4">
 
                 <div class="demo-box">
                     <div class="demo-title"><i class="fas fa-info-circle me-1"></i> Akun Demo</div>
                     <div class="demo-row">
-                        <span class="role">Admin</span>
+                        <span class="role">Super Admin</span>
                         <span>admin@rt.com / password</span>
                     </div>
                     <div class="demo-row">
@@ -166,6 +179,12 @@
                         <span class="role">Warga</span>
                         <span>warga@rt.com / password</span>
                     </div>
+                </div>
+
+                <div class="text-center mt-3">
+                    <a href="{{ route('welcome') }}" class="small text-muted text-decoration-none">
+                        <i class="fas fa-home me-1"></i> Kembali ke Beranda &amp; Lihat Fitur Web
+                    </a>
                 </div>
             </div>
         </div>

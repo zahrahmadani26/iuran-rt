@@ -100,7 +100,16 @@
     </style>
 </head>
 <body>
-<div class="register-box">
+<div style="width:100%;max-width:620px;">
+    <div class="mb-3 d-flex justify-content-between align-items-center">
+        <a href="{{ route('welcome') }}" class="btn btn-light btn-sm rounded-pill px-3 fw-semibold shadow-sm" style="color:#3730a3;">
+            <i class="fas fa-arrow-left me-1"></i> Kembali ke Welcome Page
+        </a>
+        <a href="{{ route('login') }}" class="btn btn-outline-light btn-sm rounded-pill px-3 fw-semibold">
+            <i class="fas fa-sign-in-alt me-1"></i> Masuk
+        </a>
+    </div>
+    <div class="register-box">
     <div class="register-brand">
         <div class="brand-icon"><i class="fas fa-building-user"></i></div>
         <h1>Daftar Sebagai Warga</h1>
@@ -184,8 +193,9 @@
         <span class="text-muted" style="font-size:.9rem;">Sudah punya akun? </span>
         <a href="{{ route('login') }}" style="color:#4f46e5;font-weight:600;text-decoration:none;">Masuk di sini</a>
         <span class="mx-2 text-muted">·</span>
-        <a href="{{ route('welcome') }}" style="color:#64748b;font-size:.85rem;text-decoration:none;">← Kembali ke beranda</a>
+        <a href="{{ route('welcome') }}" style="color:#64748b;font-size:.85rem;text-decoration:none;">← Kembali ke Welcome Page</a>
     </div>
+</div>
 </div>
 </body>
 </html>

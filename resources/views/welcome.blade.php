@@ -248,20 +248,31 @@
 <!-- Navbar -->
 <nav class="welcome-nav">
     <div class="container">
-        <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center justify-content-between gap-2">
             <a href="{{ route('welcome') }}" class="nav-brand">
                 <div class="brand-icon">
                     <i class="fas fa-building-user"></i>
                 </div>
                 SI-IURAN RT
             </a>
+            <div class="d-none d-md-flex align-items-center gap-4">
+                <a href="#fitur" class="text-decoration-none fw-semibold text-secondary">Fitur Web</a>
+                <a href="#peran" class="text-decoration-none fw-semibold text-secondary">Menu &amp; Hak Akses</a>
+                <a href="#cara-daftar" class="text-decoration-none fw-semibold text-secondary">Cara Daftar</a>
+            </div>
             <div class="d-flex gap-2">
-                <a href="{{ route('login') }}" class="btn btn-outline-primary rounded-pill px-4" style="font-weight:600;">
-                    <i class="fas fa-sign-in-alt me-1"></i> Masuk
-                </a>
-                <a href="{{ route('register.warga') }}" class="btn btn-primary rounded-pill px-4" style="font-weight:600;">
-                    <i class="fas fa-user-plus me-1"></i> Daftar
-                </a>
+                @auth
+                    <a href="{{ route('dashboard') }}" class="btn btn-primary rounded-pill px-4" style="font-weight:600;">
+                        <i class="fas fa-gauge me-1"></i> Dashboard
+                    </a>
+                @else
+                    <a href="{{ route('login') }}" class="btn btn-outline-primary rounded-pill px-4" style="font-weight:600;">
+                        <i class="fas fa-sign-in-alt me-1"></i> Masuk
+                    </a>
+                    <a href="{{ route('register.warga') }}" class="btn btn-primary rounded-pill px-4" style="font-weight:600;">
+                        <i class="fas fa-user-plus me-1"></i> Daftar
+                    </a>
+                @endauth
             </div>
         </div>
     </div>
@@ -274,53 +285,61 @@
             <div class="col-lg-6" style="position:relative;z-index:1;">
                 <div class="hero-badge">
                     <i class="fas fa-star" style="color:#fbbf24;"></i>
-                    Sistem Digital Iuran RT Terpercaya
+                    Portal Digital &amp; Smart Kas RT Terpadu
                 </div>
                 <h1 class="hero-title">
-                    Kelola Iuran RT<br>Lebih <span>Mudah & Transparan</span>
+                    Kelola RT &amp; Iuran<br>Lebih <span>Mudah &amp; Transparan</span>
                 </h1>
                 <p class="hero-desc">
-                    Platform digital untuk warga RT. Bayar iuran cukup dengan tap kartu RFID atau NFC Android. 
-                    Semua tercatat otomatis, laporan kas real-time.
+                    Satu aplikasi untuk seluruh kebutuhan warga dan pengurus RT: bayar iuran tap RFID/NFC, pengajuan surat pengantar PDF, pengumuman, agenda kegiatan, laporan aspirasi, data KK, hingga tombol darurat SOS.
                 </p>
                 <div class="hero-cta">
-                    <a href="{{ route('register.warga') }}" class="btn-hero-primary">
-                        <i class="fas fa-user-plus me-2"></i>Daftar Sebagai Warga
-                    </a>
-                    <a href="{{ route('login') }}" class="btn-hero-outline">
-                        <i class="fas fa-sign-in-alt me-2"></i>Sudah Punya Akun
+                    @auth
+                        <a href="{{ route('dashboard') }}" class="btn-hero-primary">
+                            <i class="fas fa-gauge me-2"></i>Masuk ke Dashboard
+                        </a>
+                    @else
+                        <a href="{{ route('register.warga') }}" class="btn-hero-primary">
+                            <i class="fas fa-user-plus me-2"></i>Daftar Sebagai Warga
+                        </a>
+                        <a href="{{ route('login') }}" class="btn-hero-outline">
+                            <i class="fas fa-sign-in-alt me-2"></i>Sudah Punya Akun
+                        </a>
+                    @endauth
+                    <a href="#fitur" class="btn-hero-outline">
+                        <i class="fas fa-list-check me-2"></i>Lihat Semua Fitur
                     </a>
                 </div>
             </div>
             <div class="col-lg-6 hero-visual">
                 <div class="hero-card">
                     <div class="mb-3 d-flex align-items-center gap-2">
-                        <i class="fas fa-chart-line" style="color:#fbbf24;font-size:1.2rem;"></i>
-                        <span style="font-weight:700;">Statistik RT</span>
+                        <i class="fas fa-cubes" style="color:#fbbf24;font-size:1.2rem;"></i>
+                        <span style="font-weight:700;">12 Modul Utama di Dalam Web</span>
                     </div>
                     <div class="row g-3">
                         <div class="col-4 hero-stat">
-                            <div class="hero-stat-num">🏠</div>
-                            <div class="hero-stat-num" style="font-size:1.8rem;">RT</div>
-                            <div class="hero-stat-label">Digital</div>
+                            <div class="hero-stat-num">💳</div>
+                            <div class="hero-stat-num" style="font-size:1.5rem;">RFID/NFC</div>
+                            <div class="hero-stat-label">Tap Bayar Cepat</div>
                         </div>
                         <div class="col-4 hero-stat">
-                            <div class="hero-stat-num">📲</div>
-                            <div class="hero-stat-num" style="font-size:1.8rem;">NFC</div>
-                            <div class="hero-stat-label">Tap Bayar</div>
+                            <div class="hero-stat-num">📄</div>
+                            <div class="hero-stat-num" style="font-size:1.5rem;">Surat PDF</div>
+                            <div class="hero-stat-label">Pengantar Online</div>
                         </div>
                         <div class="col-4 hero-stat">
-                            <div class="hero-stat-num">📊</div>
-                            <div class="hero-stat-num" style="font-size:1.8rem;">Real</div>
-                            <div class="hero-stat-label">Time Report</div>
+                            <div class="hero-stat-num">🚨</div>
+                            <div class="hero-stat-num" style="font-size:1.5rem;">SOS</div>
+                            <div class="hero-stat-label">Panic Button</div>
                         </div>
                     </div>
                     <hr style="border-color:rgba(255,255,255,0.2);margin:16px 0;">
                     <div class="d-flex align-items-center gap-3 p-3 rounded-3" style="background:rgba(255,255,255,0.1);">
                         <i class="fas fa-shield-check" style="color:#4ade80;font-size:1.3rem;"></i>
                         <div>
-                            <div style="font-weight:700;font-size:.95rem;">Terverifikasi Admin</div>
-                            <div style="opacity:.7;font-size:.8rem;">Akun warga diverifikasi langsung oleh Ketua RT</div>
+                            <div style="font-weight:700;font-size:.95rem;">Terverifikasi Super Admin</div>
+                            <div style="opacity:.75;font-size:.8rem;">Warga daftar mandiri, akun diaktifkan oleh Ketua RT</div>
                         </div>
                     </div>
                 </div>
@@ -330,81 +349,171 @@
 </section>
 
 <!-- Features -->
-<section class="features-section">
+<section class="features-section" id="fitur">
     <div class="container">
-        <h2 class="section-title">Fitur Unggulan</h2>
-        <p class="section-sub">Semua yang kamu butuhkan untuk kelola RT digital ada di sini</p>
+        <h2 class="section-title">Semua Fitur yang Terdapat di Web</h2>
+        <p class="section-sub">Jelajahi lengkapnya layanan digital untuk warga dan pengurus RT sebelum masuk</p>
         <div class="row g-4">
-            <div class="col-md-4">
+            <div class="col-md-6 col-lg-4">
                 <div class="feature-card">
                     <div class="feature-icon" style="background:#ede9fe;color:#7c3aed;">
                         <i class="fas fa-id-card-clip"></i>
                     </div>
-                    <div class="feature-title">Tap RFID / NFC</div>
-                    <p class="feature-desc">Bayar iuran hanya dengan menempelkan kartu RFID ke mesin atau tap NFC lewat HP Android. Langsung tercatat otomatis.</p>
+                    <div class="feature-title">1. Tap Kartu RFID (ESP32)</div>
+                    <p class="feature-desc">Bayar iuran otomatis cukup tempel kartu RFID ke mesin pembaca RC522 berbasis ESP32. Riwayat tap tercatat langsung ke kas RT.</p>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6 col-lg-4">
                 <div class="feature-card">
                     <div class="feature-icon" style="background:#dcfce7;color:#16a34a;">
-                        <i class="fas fa-chart-pie"></i>
+                        <i class="fas fa-mobile-screen-button"></i>
                     </div>
-                    <div class="feature-title">Laporan Kas Transparan</div>
-                    <p class="feature-desc">Semua pemasukan dan pengeluaran kas RT tercatat real-time. Warga bisa pantau kondisi keuangan RT kapan saja.</p>
+                    <div class="feature-title">2. Tap NFC via HP Android</div>
+                    <p class="feature-desc">Alternatif tanpa alat tambahan: pengurus bisa menempelkan kartu langsung ke sensor NFC HP Android lewat browser Chrome.</p>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon" style="background:#e0e7ff;color:#4f46e5;">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="feature-title">3. Dashboard &amp; Grafik Keuangan</div>
+                    <p class="feature-desc">Pantau saldo kas RT, grafik pemasukan vs pengeluaran bulanan, rasio kepatuhan bayar warga, dan kategori pengeluaran secara real-time.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
                 <div class="feature-card">
                     <div class="feature-icon" style="background:#fef3c7;color:#d97706;">
                         <i class="fas fa-file-signature"></i>
                     </div>
-                    <div class="feature-title">Surat Pengantar Digital</div>
-                    <p class="feature-desc">Ajukan surat domisili, pengantar KTP, SKCK, atau SKTM online. Setelah disetujui Ketua RT, langsung unduh file PDF resmi.</p>
+                    <div class="feature-title">4. Surat Pengantar Digital (PDF)</div>
+                    <p class="feature-desc">Ajukan surat domisili, pengantar KTP, SKCK, usaha, atau SKTM online. Setelah disetujui RT, nomor surat otomatis terbit dan siap unduh PDF.</p>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6 col-lg-4">
                 <div class="feature-card">
                     <div class="feature-icon" style="background:#fee2e2;color:#dc2626;">
                         <i class="fas fa-triangle-exclamation"></i>
                     </div>
-                    <div class="feature-title">Panic Button SOS & Darurat</div>
-                    <p class="feature-desc">Tombol darurat sekali klik untuk kebakaran, kemalingan, atau darurat medis beserta daftar nomor penting PLN, Damkar, & Polisi.</p>
+                    <div class="feature-title">5. Panic Button SOS Darurat</div>
+                    <p class="feature-desc">Tombol darurat 1-klik untuk kebakaran, kemalingan, kecelakaan, atau kondisi medis yang mengirim alert aktif ke dashboard pengurus RT.</p>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon" style="background:#ffe4e6;color:#e11d48;">
+                        <i class="fas fa-phone-volume"></i>
+                    </div>
+                    <div class="feature-title">6. Kontak Darurat 24 Jam</div>
+                    <p class="feature-desc">Direktori nomor penting Ketua RT, Satpam, Polisi (110), Pemadam Kebakaran (113), Ambulans (119), dan PLN (123) dengan tombol telepon langsung.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
                 <div class="feature-card">
                     <div class="feature-icon" style="background:#e0f2fe;color:#0284c7;">
                         <i class="fas fa-bullhorn"></i>
                     </div>
-                    <div class="feature-title">Pengumuman & Agenda RT</div>
-                    <p class="feature-desc">Papan pengumuman resmi dan kalender jadwal kegiatan warga (kerja bakti, rapat, posyandu) agar warga tidak ketinggalan info.</p>
+                    <div class="feature-title">7. Papan Pengumuman RT</div>
+                    <p class="feature-desc">Pengumuman resmi berkategori Umum, Penting, hingga Darurat dengan fitur sematkan (pin) di atas dan tampil langsung di beranda dashboard.</p>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon" style="background:#ecfeff;color:#0891b2;">
+                        <i class="fas fa-calendar-days"></i>
+                    </div>
+                    <div class="feature-title">8. Jadwal Kegiatan Lingkungan</div>
+                    <p class="feature-desc">Kalender kegiatan warga seperti kerja bakti, rapat RT, posyandu, arisan, dan olahraga lengkap dengan jam dan lokasi acara.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
                 <div class="feature-card">
                     <div class="feature-icon" style="background:#fce7f3;color:#db2777;">
                         <i class="fas fa-comments"></i>
                     </div>
-                    <div class="feature-title">Laporan & Aspirasi Warga</div>
-                    <p class="feature-desc">Laporkan fasilitas rusak seperti lampu mati atau saluran mampet lengkap dengan foto, dan pantau progres penanganannya.</p>
+                    <div class="feature-title">9. Laporan &amp; Aspirasi Warga</div>
+                    <p class="feature-desc">Laporkan masalah fasilitas lingkungan (lampu mati, jalan rusak, sampah) lengkap dengan lokasi &amp; foto bukti, serta tanggapan dari pengurus.</p>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6 col-lg-4">
                 <div class="feature-card">
                     <div class="feature-icon" style="background:#f0fdf4;color:#15803d;">
                         <i class="fas fa-house-user"></i>
                     </div>
-                    <div class="feature-title">Data Kartu Keluarga (KK)</div>
-                    <p class="feature-desc">Pendataan anggota keluarga per rumah lengkap dan rapi, terhubung dengan sistem verifikasi Super Admin Ketua RT.</p>
+                    <div class="feature-title">10. Data Kartu Keluarga (KK)</div>
+                    <p class="feature-desc">Pendataan lengkap kepala keluarga dan anggota keluarga per rumah (NIK, hubungan, TTL, pekerjaan, status kawin) dalam satu halaman terpadu.</p>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6 col-lg-4">
                 <div class="feature-card">
                     <div class="feature-icon" style="background:#f3e8ff;color:#9333ea;">
                         <i class="fas fa-user-shield"></i>
                     </div>
-                    <div class="feature-title">Verifikasi Super Admin</div>
-                    <p class="feature-desc">Setiap pendaftaran warga baru harus diverifikasi oleh Ketua RT sebagai Super Admin sebelum dapat mengakses sistem.</p>
+                    <div class="feature-title">11. Panel Super Admin &amp; Verifikasi</div>
+                    <p class="feature-desc">Setiap warga yang mendaftar harus diverifikasi Ketua RT (Super Admin) sebelum akun aktif. Pengurus juga dapat mengatur role Admin &amp; Bendahara.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon" style="background:#f1f5f9;color:#334155;">
+                        <i class="fas fa-file-excel"></i>
+                    </div>
+                    <div class="feature-title">12. Tarif Iuran &amp; Export Kas Excel</div>
+                    <p class="feature-desc">Atur tarif iuran bulanan, verifikasi bukti transfer manual maupun QR/RFID, catat kas masuk/keluar, dan unduh laporan keuangan ke Excel.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Ringkasan Hak Akses & Menu -->
+<section class="py-5" id="peran" style="background:#f8fafc;border-top:1px solid #e2e8f0;border-bottom:1px solid #e2e8f0;">
+    <div class="container py-4">
+        <h2 class="section-title">Menu Berdasarkan Peran Pengguna</h2>
+        <p class="section-sub">Setiap akun mendapat tampilan menu yang sesuai kebutuhannya</p>
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm rounded-4 h-100 p-4">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div class="feature-icon mb-0" style="background:#e0e7ff;color:#4f46e5;">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-0">Akun Warga</h5>
+                            <small class="text-muted">Menu yang bisa diakses setelah mendaftar &amp; diverifikasi</small>
+                        </div>
+                    </div>
+                    <ul class="list-unstyled mb-0 d-grid gap-2 text-secondary">
+                        <li><i class="fas fa-check-circle text-success me-2"></i><strong>Dashboard Portal Warga:</strong> Ringkasan kas RT, pengumuman, agenda &amp; grafik</li>
+                        <li><i class="fas fa-check-circle text-success me-2"></i><strong>Pembayaran Iuran:</strong> Bayar &amp; pantau riwayat pembayaran iuran sendiri</li>
+                        <li><i class="fas fa-check-circle text-success me-2"></i><strong>Surat Pengantar Digital:</strong> Ajukan surat &amp; download PDF setelah disetujui</li>
+                        <li><i class="fas fa-check-circle text-success me-2"></i><strong>Laporan &amp; Aspirasi:</strong> Kirim keluhan/saran beserta foto &amp; pantau progres</li>
+                        <li><i class="fas fa-check-circle text-success me-2"></i><strong>Data KK / Keluarga:</strong> Kelola anggota keluarga pada Kartu Keluarga sendiri</li>
+                        <li><i class="fas fa-check-circle text-success me-2"></i><strong>Pengumuman &amp; Jadwal:</strong> Baca info resmi dan agenda lingkungan RT</li>
+                        <li><i class="fas fa-check-circle text-danger me-2"></i><strong>Panic Button SOS &amp; Kontak Darurat:</strong> Kirim sinyal bahaya &amp; telepon darurat</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm rounded-4 h-100 p-4">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div class="feature-icon mb-0" style="background:#f3e8ff;color:#7c3aed;">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-0">Super Admin / Admin / Bendahara RT</h5>
+                            <small class="text-muted">Seluruh fitur warga ditambah kontrol penuh manajemen RT</small>
+                        </div>
+                    </div>
+                    <ul class="list-unstyled mb-0 d-grid gap-2 text-secondary">
+                        <li><i class="fas fa-shield-halved text-primary me-2"></i><strong>Panel Super Admin:</strong> Setujui/tolak pendaftar warga baru &amp; atur role pengurus</li>
+                        <li><i class="fas fa-shield-halved text-primary me-2"></i><strong>Data Warga &amp; KK:</strong> Kelola seluruh warga, kartu RFID, dan data semua KK</li>
+                        <li><i class="fas fa-shield-halved text-primary me-2"></i><strong>RFID ESP32 &amp; Tap NFC Android:</strong> Proses pembayaran tap kartu langsung</li>
+                        <li><i class="fas fa-shield-halved text-primary me-2"></i><strong>Persetujuan Surat &amp; Laporan:</strong> Terbitkan nomor surat PDF &amp; tanggapi aduan</li>
+                        <li><i class="fas fa-shield-halved text-primary me-2"></i><strong>Keuangan &amp; Tarif Iuran:</strong> Catat kas masuk/keluar, verifikasi bayar, export Excel</li>
+                        <li><i class="fas fa-shield-halved text-primary me-2"></i><strong>Kelola Pengumuman &amp; Jadwal:</strong> Publikasikan pengumuman pin &amp; agenda RT</li>
+                        <li><i class="fas fa-shield-halved text-danger me-2"></i><strong>Penanganan SOS &amp; Kontak Darurat:</strong> Tangani alert SOS &amp; kelola nomor penting</li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -412,7 +521,7 @@
 </section>
 
 <!-- How it works -->
-<section class="how-section">
+<section class="how-section" id="cara-daftar">
     <div class="container">
         <h2 class="section-title">Cara Daftar</h2>
         <p class="section-sub">Hanya 3 langkah mudah untuk bergabung</p>

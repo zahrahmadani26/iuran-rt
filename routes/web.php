@@ -24,6 +24,11 @@ Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
+// Preview welcome page kapan saja (termasuk saat sudah login)
+Route::get('/welcome', function () {
+    return view('welcome');
+})->name('welcome.page');
+
 // === REGISTRASI WARGA (publik) ===
 Route::get('/daftar', [RegisterWargaController::class, 'showForm'])->name('register.warga');
 Route::post('/daftar', [RegisterWargaController::class, 'store'])->name('register.warga.store');
