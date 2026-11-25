@@ -1,9 +1,9 @@
 # ============================================================
 # Fly.io Configuration File: SI-IURAN RT
-# App Name: iuran-rt-zahrahmadani
+# App Name: iuran-rt-zahrahmadani-app
 # Region: Singapore (sin) - Latensi rendah untuk Indonesia
 # ============================================================
-app = 'iuran-rt-zahrahmadani'
+app = 'iuran-rt-zahrahmadani-app'
 primary_region = 'sin'
 
 [build]
@@ -12,7 +12,7 @@ primary_region = 'sin'
 [env]
   APP_ENV = 'production'
   APP_DEBUG = 'false'
-  APP_URL = 'https://iuran-rt-zahrahmadani.fly.dev'
+  APP_URL = 'https://iuran-rt-zahrahmadani-app.fly.dev'
   LOG_CHANNEL = 'stderr'
   LOG_LEVEL = 'info'
   DB_CONNECTION = 'sqlite'
@@ -26,7 +26,7 @@ primary_region = 'sin'
 [http_service]
   internal_port = 8080
   force_https = true
-  auto_stop_machines = 'stop'
+  auto_stop_machines = false
   auto_start_machines = true
   min_machines_running = 1
   processes = ['app']
