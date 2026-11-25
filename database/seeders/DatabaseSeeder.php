@@ -13,28 +13,31 @@ class DatabaseSeeder extends Seeder
 {
     public function run()
     {
-        // Buat Admin
+        // Buat Super Admin (Ketua RT)
         $admin = User::create([
-            'name' => 'Admin RT',
-            'email' => 'admin@rt.com',
-            'password' => Hash::make('password'),
-            'role' => 'admin'
+            'name'          => 'Admin RT',
+            'email'         => 'admin@rt.com',
+            'password'      => Hash::make('password'),
+            'role'          => 'super_admin',
+            'status_akun'   => 'aktif',
         ]);
         
         // Buat Bendahara
         $bendahara = User::create([
-            'name' => 'Bendahara RT',
-            'email' => 'bendahara@rt.com',
-            'password' => Hash::make('password'),
-            'role' => 'bendahara'
+            'name'          => 'Bendahara RT',
+            'email'         => 'bendahara@rt.com',
+            'password'      => Hash::make('password'),
+            'role'          => 'bendahara',
+            'status_akun'   => 'aktif',
         ]);
         
-        // Buat Warga
+        // Buat Warga contoh
         $wargaUser = User::create([
-            'name' => 'Warga 1',
-            'email' => 'warga@rt.com',
-            'password' => Hash::make('password'),
-            'role' => 'warga'
+            'name'          => 'Warga 1',
+            'email'         => 'warga@rt.com',
+            'password'      => Hash::make('password'),
+            'role'          => 'warga',
+            'status_akun'   => 'aktif',
         ]);
         
         Warga::create([

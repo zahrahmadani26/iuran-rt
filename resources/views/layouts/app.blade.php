@@ -323,7 +323,18 @@
                     <span>Dashboard</span>
                 </a>
                 
-                @if(auth()->user()->role != 'warga')
+                @if(auth()->user()->role === 'super_admin')
+                <a href="{{ route('super_admin.index') }}" class="sidebar-link {{ request()->routeIs('super_admin.*') ? 'active' : '' }}">
+                    <i class="fas fa-user-shield"></i>
+                    <span>Panel Super Admin</span>
+                    @php $pendingCount = \App\Models\User::where('status_akun','pending')->count(); @endphp
+                    @if($pendingCount > 0)
+                        <span class="badge bg-warning text-dark ms-auto">{{ $pendingCount }}</span>
+                    @endif
+                </a>
+                @endif
+
+                @if(in_array(auth()->user()->role, ['super_admin','admin','bendahara']))
                 <a href="{{ route('warga.index') }}" class="sidebar-link {{ request()->routeIs('warga.*') ? 'active' : '' }}">
                     <i class="fas fa-users-rectangle"></i>
                     <span>Data Warga</span>
@@ -348,7 +359,7 @@
                     <span>Pembayaran</span>
                 </a>
                 
-                @if(auth()->user()->role != 'warga')
+                @if(in_array(auth()->user()->role, ['super_admin','admin','bendahara']))
                 <span class="nav-section-title mt-2">Keuangan</span>
                 
                 <a href="{{ route('keuangan.index') }}" class="sidebar-link {{ request()->routeIs('keuangan.index') ? 'active' : '' }}">
@@ -397,7 +408,12 @@
                     </button>
                     <div>
                         <span class="badge bg-indigo-subtle text-primary border border-primary-subtle rounded-pill px-3 py-1">
-                            <i class="fas fa-shield-halved me-1"></i> {{ ucfirst(auth()->user()->role) }} RT
+                            <i class="fas fa-shield-halved me-1"></i>
+                            @if(auth()->user()->role === 'super_admin')
+                                👑 Super Admin RT
+                            @else
+                                {{ ucfirst(auth()->user()->role) }} RT
+                            @endif
                         </span>
                     </div>
                 </div>
