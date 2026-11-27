@@ -9,10 +9,30 @@ use Illuminate\Support\Facades\Hash;
 
 class WargaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $wargas = Warga::with('user')->get();
-        return view('warga.index', compact('wargas'));
+        $query = Warga::with('user')->orderBy('id', 'desc');
+
+        if ($request->filled('q')) {
+            $q = $request->q;
+            $query->where(function ($sub) use ($q) {
+                $sub->where('nama_lengkap', 'like', "%{$q}%")
+                    ->orWhere('nik', 'like', "%{$q}%")
+                    ->orWhere('no_kk', 'like', "%{$q}%")
+                    ->orWhere('alamat', 'like', "%{$q}%")
+                    ->orWhere('no_telp', 'like', "%{$q}%")
+                    ->orWhere('rfid_uid', 'like', "%{$q}%");
+            });
+        }
+
+        if ($request->filled('status') && in_array($request->status, ['aktif', 'nonaktif'])) {
+            $query->where('status', $request->status);
+        }
+
+        $wargas = $query->paginate(25)->withQueryString();
+        $totalSemuaWarga = Warga::count();
+
+        return view('warga.index', compact('wargas', 'totalSemuaWarga'));
     }
     
     public function create()

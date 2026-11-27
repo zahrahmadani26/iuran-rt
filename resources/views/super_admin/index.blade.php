@@ -138,8 +138,15 @@
 
 {{-- SEMUA WARGA AKTIF / DITOLAK --}}
 <div class="card border-0 rounded-4 shadow-sm mb-4">
-    <div class="card-header bg-white border-0 rounded-top-4 py-3 px-4 d-flex align-items-center justify-content-between">
-        <h6 class="mb-0 fw-bold"><i class="fas fa-users me-2 text-primary"></i>Semua Warga Terdaftar</h6>
+    <div class="card-header bg-white border-0 rounded-top-4 py-3 px-4 d-flex flex-wrap align-items-center justify-content-between gap-2">
+        <h6 class="mb-0 fw-bold"><i class="fas fa-users me-2 text-primary"></i>Semua Warga Terdaftar ({{ $allWargaUsers->total() }})</h6>
+        <form method="GET" action="{{ route('super_admin.index') }}" class="d-flex gap-2">
+            <input type="text" name="q" class="form-control form-control-sm rounded-pill px-3" placeholder="Cari nama / email..." value="{{ request('q') }}">
+            <button type="submit" class="btn btn-sm btn-primary rounded-pill px-3">Cari</button>
+            @if(request('q'))
+                <a href="{{ route('super_admin.index') }}" class="btn btn-sm btn-outline-secondary rounded-pill">Reset</a>
+            @endif
+        </form>
     </div>
     <div class="card-body p-0">
         <div class="table-responsive">
@@ -157,7 +164,7 @@
                 <tbody>
                     @forelse($allWargaUsers as $i => $user)
                     <tr>
-                        <td class="ps-4 text-muted">{{ $i+1 }}</td>
+                        <td class="ps-4 text-muted">{{ $allWargaUsers->firstItem() + $i }}</td>
                         <td class="fw-semibold">{{ $user->name }}</td>
                         <td><small class="text-muted">{{ $user->email }}</small></td>
                         <td>
@@ -204,6 +211,12 @@
             </table>
         </div>
     </div>
+    @if($allWargaUsers->hasPages())
+    <div class="card-footer bg-white border-0 px-4 py-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <small class="text-muted">Menampilkan {{ $allWargaUsers->firstItem() }}–{{ $allWargaUsers->lastItem() }} dari {{ $allWargaUsers->total() }} warga</small>
+        {{ $allWargaUsers->links() }}
+    </div>
+    @endif
 </div>
 
 {{-- ADMIN & BENDAHARA --}}

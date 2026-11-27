@@ -23,6 +23,31 @@
 
     @include('layouts.alerts')
 
+    {{-- Filter & Pencarian --}}
+    <div class="card border-0 shadow-sm rounded-4 mb-4 p-3">
+        <form method="GET" action="{{ route('warga.index') }}" class="row g-2 align-items-center">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0 rounded-start-pill ps-3"><i class="fas fa-search text-muted"></i></span>
+                    <input type="text" name="q" class="form-control border-start-0 rounded-end-pill" placeholder="Cari nama, NIK, No. KK, alamat, no. telp, atau RFID UID..." value="{{ request('q') }}">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <select name="status" class="form-select rounded-pill">
+                    <option value="">Semua Status</option>
+                    <option value="aktif" {{ request('status') == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                    <option value="nonaktif" {{ request('status') == 'nonaktif' ? 'selected' : '' }}>Non-Aktif</option>
+                </select>
+            </div>
+            <div class="col-md-3 d-flex gap-2">
+                <button type="submit" class="btn btn-primary rounded-pill px-4 flex-grow-1">Cari</button>
+                @if(request('q') || request('status'))
+                    <a href="{{ route('warga.index') }}" class="btn btn-outline-secondary rounded-pill px-3">Reset</a>
+                @endif
+            </div>
+        </form>
+    </div>
+
     {{-- Table Card --}}
     <div class="card border-0 shadow-sm rounded-4">
         <div class="card-body p-0">
@@ -43,7 +68,7 @@
                     <tbody>
                         @forelse($wargas as $key => $warga)
                         <tr>
-                            <td class="ps-4 text-muted">{{ $key + 1 }}</td>
+                            <td class="ps-4 text-muted">{{ $wargas->firstItem() + $key }}</td>
                             <td><code class="text-dark">{{ $warga->nik }}</code></td>
                             <td>
                                 <div class="d-flex align-items-center gap-2">
@@ -109,9 +134,17 @@
                 </table>
             </div>
         </div>
-        @if($wargas->count() > 0)
-        <div class="card-footer bg-transparent border-0 px-4 py-3">
-            <small class="text-muted">Total: <strong>{{ $wargas->count() }}</strong> warga</small>
+        @if($wargas->total() > 0)
+        <div class="card-footer bg-transparent border-0 px-4 py-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <small class="text-muted">
+                Menampilkan <strong>{{ $wargas->firstItem() }}–{{ $wargas->lastItem() }}</strong> dari <strong>{{ $wargas->total() }}</strong> warga
+                @if(isset($totalSemuaWarga) && $wargas->total() !== $totalSemuaWarga)
+                    (Total seluruh database: <strong>{{ $totalSemuaWarga }}</strong>)
+                @endif
+            </small>
+            <div>
+                {{ $wargas->links() }}
+            </div>
         </div>
         @endif
     </div>

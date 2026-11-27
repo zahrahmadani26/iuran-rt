@@ -9,7 +9,7 @@
         </div>
         <div class="d-flex gap-2 align-items-center">
             <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2">
-                <i class="fas fa-house me-1"></i> {{ $wargas->count() }} KK · {{ $totalAnggota }} Anggota Terdaftar
+                <i class="fas fa-house me-1"></i> {{ $wargas->total() }} KK · {{ $totalAnggota }} Anggota Terdaftar
             </span>
         </div>
     </div>
@@ -240,5 +240,12 @@
         <p class="mb-0">Belum ada data Kepala Keluarga / Warga yang terdaftar untuk akun ini.</p>
     </div>
     @endforelse
+
+    @if($wargas->hasPages())
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-3">
+        <small class="text-muted">Menampilkan {{ $wargas->firstItem() }}–{{ $wargas->lastItem() }} dari {{ $wargas->total() }} KK</small>
+        {{ $wargas->links() }}
+    </div>
+    @endif
 </div>
 @endsection

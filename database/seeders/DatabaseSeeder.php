@@ -73,5 +73,8 @@ class DatabaseSeeder extends Seeder
             'nominal' => 200000,
             'tanggal' => '2024-11-05'
         ]);
+
+        // Seed 100 warga tambahan
+        $this->call(WargaSeeder::class);
     }
 }

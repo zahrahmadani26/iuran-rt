@@ -28,11 +28,11 @@ class KartuKeluargaController extends Controller
                         ->orWhere('nik', 'like', "%{$q}%");
                 });
             }
-            $wargas = $query->get();
+            $wargas = $query->paginate(10)->withQueryString();
             $totalAnggota = KartuKeluarga::count();
         } else {
-            $wargas = Warga::with('kartuKeluargas')->where('user_id', $user->id)->get();
-            $wargaIds = $wargas->pluck('id');
+            $wargas = Warga::with('kartuKeluargas')->where('user_id', $user->id)->paginate(10)->withQueryString();
+            $wargaIds = Warga::where('user_id', $user->id)->pluck('id');
             $totalAnggota = KartuKeluarga::whereIn('warga_id', $wargaIds)->count();
         }
 

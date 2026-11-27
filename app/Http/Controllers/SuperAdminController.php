@@ -11,7 +11,7 @@ class SuperAdminController extends Controller
     /**
      * Dashboard Super Admin — daftar warga pending verifikasi
      */
-    public function index()
+    public function index(Request $request)
     {
         $pendingUsers = User::where('role', 'warga')
             ->where('status_akun', 'pending')
@@ -19,11 +19,20 @@ class SuperAdminController extends Controller
             ->latest()
             ->get();
 
-        $allWargaUsers = User::where('role', 'warga')
+        $wargaQuery = User::where('role', 'warga')
             ->where('status_akun', '!=', 'pending')
             ->with('warga')
-            ->latest()
-            ->get();
+            ->latest();
+
+        if ($request->filled('q')) {
+            $q = $request->q;
+            $wargaQuery->where(function ($sub) use ($q) {
+                $sub->where('name', 'like', "%{$q}%")
+                    ->orWhere('email', 'like', "%{$q}%");
+            });
+        }
+
+        $allWargaUsers = $wargaQuery->paginate(20)->withQueryString();
 
         $allAdmins = User::whereIn('role', ['admin', 'bendahara', 'super_admin'])
             ->latest()
